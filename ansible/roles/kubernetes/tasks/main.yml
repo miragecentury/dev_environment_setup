@@ -1,0 +1,7 @@
+---
+- name: Include kubectl tasks
+  ansible.builtin.include_tasks: kubectl.yml
+  tags: kubectl
+- name: Include k9s tasks
+  ansible.builtin.include_tasks: k9s.yml
+  tags: k9s

@@ -1,0 +1,18 @@
+---
+
+- name: Auto-Setup Dev Environment
+  hosts:
+    - localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - role: dependencies
+    - role: tools
+    - role: git
+    - role: zsh
+      vars:
+        zsh_certificates_autoload:
+          - "~/.ssh/github"
+          - "~/.ssh/melanie.localunicorns.info"
+          - "~/.ssh/outside_cluster_tools_project_key"
+    - role: kubernetes

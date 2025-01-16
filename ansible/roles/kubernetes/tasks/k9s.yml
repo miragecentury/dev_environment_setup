@@ -1,0 +1,13 @@
+---
+
+- name: Detect if k9s is installed
+  ansible.builtin.command: k9s version
+  register: k9s_version
+  ignore_errors: true
+  changed_when: false
+
+- name: Install k9s
+  ansible.builtin.shell: set -opipefail | curl -sS https://webinstall.dev/k9s | bash
+  when: k9s_version.rc != 0
+  tags: k9s
+  changed_when: true

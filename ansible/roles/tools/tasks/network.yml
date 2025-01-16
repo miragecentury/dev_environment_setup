@@ -1,0 +1,11 @@
+---
+- name: Install dnsutils
+  ansible.builtin.apt:
+    name: dnsutils
+    state: present
+  become: true
+- name: Install net-tools
+  ansible.builtin.apt:
+    name: net-tools
+    state: present
+  become: true

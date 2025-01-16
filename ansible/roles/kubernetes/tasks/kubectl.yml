@@ -1,0 +1,43 @@
+---
+
+- name: Retrieve from github the latest kubectl version
+  ansible.builtin.uri:
+    url: https://storage.googleapis.com/kubernetes-release/release/stable.txt
+    return_content: true
+  register: kubectl_version
+  changed_when: false
+
+- name: Check if kubectl is installed
+  ansible.builtin.shell: kubectl version -o=json | jq -r .clientVersion.gitVersion
+  register: kubectl_version_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Install kubectl if version is different
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.content }}/bin/linux/amd64/kubectl
+    dest: /usr/local/bin/kubectl
+    mode: 755
+  when: kubectl_version.content != kubectl_version_installed.stdout
+
+- name: Retrive if kubectx is installed
+  ansible.builtin.shell: kubectl krew list | grep ctx
+  register: kubectx_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Install kubectx with krew
+  ansible.builtin.command: kubectl krew install ctx
+  when: kubectx_installed.rc != 0
+  changed_when: true
+
+- name: Retrive if kubens is installed
+  ansible.builtin.shell: kubectl krew list | grep ns
+  register: kubens_installed
+  ignore_errors: true
+  changed_when: false
+
+- name: Install kubens with krew
+  ansible.builtin.command: kubectl krew install ns
+  when: kubens_installed.rc != 0
+  changed_when: true

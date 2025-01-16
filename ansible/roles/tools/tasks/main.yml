@@ -1,0 +1,7 @@
+---
+- name: Include network tools
+  ansible.builtin.include_tasks: network.yml
+  tags: network
+- name: Include python tools
+  ansible.builtin.include_tasks: python.yml
+  tags: python

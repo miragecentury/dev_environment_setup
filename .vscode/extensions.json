@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "redhat.ansible",
+    "elagil.pre-commit-helper",
+    "redhat.vscode-yaml"
+  ]
+}

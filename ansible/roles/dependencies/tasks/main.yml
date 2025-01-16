@@ -1,0 +1,12 @@
+---
+- name: Install basic dependencies
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - software-properties-common
+    - jq
+  become: true
