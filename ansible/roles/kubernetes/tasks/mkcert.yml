@@ -1,0 +1,33 @@
+---
+
+- name: Check if mkcert is installed
+  ansible.builtin.command: mkcert -version
+  register: mkcert_version
+  ignore_errors: true
+  changed_when: false
+
+- name: Get latest mkcert version through github tag
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/FiloSottile/mkcert/releases/latest
+    return_content: true
+  register: mkcert_latest_release
+  changed_when: false
+
+- name: Get Version from release
+  ansible.builtin.set_fact:
+    mkcert_latest_version: "{{ mkcert_latest_release.json.tag_name }}"
+  changed_when: false
+
+- name: Install libnss3-tools
+  ansible.builtin.apt:
+    name: libnss3-tools
+    state: present
+  become: true
+
+- name: Install mkcert
+  ansible.builtin.get_url:
+    url: https://dl.filippo.io/mkcert/latest?for=linux/amd64
+    dest: /usr/local/bin/mkcert
+    mode: 755
+  when: mkcert_version.rc != mkcert_latest_version
+  become: true

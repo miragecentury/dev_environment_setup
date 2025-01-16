@@ -5,3 +5,6 @@
 - name: Include k9s tasks
   ansible.builtin.include_tasks: k9s.yml
   tags: k9s
+- name: Include mkcert tasks
+  ansible.builtin.include_tasks: mkcert.yml
+  tags: mkcert
