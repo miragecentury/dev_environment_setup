@@ -31,3 +31,15 @@
     mode: 755
   when: mkcert_version.rc != mkcert_latest_version
   become: true
+
+- name: Check if mkcert ca installed
+  ansible.builtin.stat:
+    path: "/home/{{ username }}/.local/share/mkcert/rootCA.pem"
+  register: mkcert_ca_file
+  changed_when: false
+
+- name: Install mkcert ca
+  ansible.builtin.command: mkcert -install
+  when: not mkcert_ca_file.stat.exists
+  become: true
+  changed_when: true

@@ -5,6 +5,8 @@
     - localhost
   connection: local
   gather_facts: false
+  vars:
+    username: "{{ lookup('env', 'USER') }}"
   roles:
     - role: dependencies
     - role: tools
