@@ -1,6 +1,6 @@
 ---
-# Oh My Posh theme (built-in name or path to a theme file)
-omp_theme: jandedobbeleer
+# Oh My Posh config file deployed from roles/zsh/files/oh-my-posh.omp.toml
+omp_config: "{{ ansible_env.HOME }}/.config/oh-my-posh/config.toml"
 
 # SSH keys to load into the agent (paths relative to home)
 ssh_identities:
@@ -10,6 +10,45 @@ ssh_identities:
 
 # Optional GPG key id for keychain plugin (leave empty to skip)
 gpg_key_id: ""
+
+# Classic CLI tools (htop, dig, nmap, …)
+debian_cli_packages:
+  - htop
+  - dnsutils # dig, nslookup, host
+  - nmap
+  - jq
+  - tree
+  - netcat-openbsd
+  - traceroute
+  - mtr-tiny
+  - tcpdump
+  - whois
+  - rsync
+  - unzip
+  - watch
+  - ripgrep
+  - fd-find
+  - wget
+
+homebrew_cli_packages:
+  - htop
+  - nmap
+  - jq
+  - tree
+  - mtr
+  - ripgrep
+  - fd
+  - wget
+
+# DeerHide agent skills (https://github.com/DeerHide/agent_skills)
+agent_skills_repo: DeerHide/agent_skills
+
+# AI tooling
+caveman_skills_repo: JuliusBrussee/caveman
+ponytail_skills_repo: dietrichgebert/ponytail
+rtk_install_script: https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh
+codegraph_install_script: https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh
+rtk_init_global: true
 
 # macOS Homebrew casks to install
 homebrew_casks:
