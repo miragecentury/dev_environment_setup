@@ -3,8 +3,9 @@
 omp_config: "{{ ansible_env.HOME }}/.config/oh-my-posh/config.toml"
 
 # SSH keys to load into the agent (paths relative to home)
+github_ssh_identity: ~/.ssh/github
 ssh_identities:
-  - ~/.ssh/github
+  - "{{ github_ssh_identity }}"
   - ~/.ssh/melanie.localunicorns.info
   - ~/.ssh/outside_cluster_tools_project_key
 
@@ -60,12 +61,21 @@ angular_npm_packages:
 # DeerHide agent skills (https://github.com/DeerHide/agent_skills)
 agent_skills_repo: DeerHide/agent_skills
 
+# mirrord (Debian install script; macOS uses Homebrew tap)
+mirrord_install_script: https://raw.githubusercontent.com/metalbear-co/mirrord/main/scripts/install.sh
+
+# MongoDB shell (Debian uses official MongoDB apt repo)
+mongodb_apt_version: "8.0"
+
 # AI tooling
 caveman_skills_repo: JuliusBrussee/caveman
 ponytail_skills_repo: dietrichgebert/ponytail
 rtk_install_script: https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh
 codegraph_install_script: https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh
 rtk_init_global: true
+
+# macOS: prompt for Touch ID when sudo asks for a password (falls back to password)
+sudo_touchid: true
 
 # macOS Homebrew casks to install
 homebrew_casks:

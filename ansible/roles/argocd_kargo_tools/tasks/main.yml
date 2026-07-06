@@ -1,0 +1,57 @@
+---
+- name: Install argocd (macOS)
+  community.general.homebrew:
+    name: argocd
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_argocd
+  failed_when:
+    - brew_argocd is failed
+    - "'Error:' in (brew_argocd.msg | default(''))"
+
+- name: Install kargo (macOS)
+  community.general.homebrew:
+    name: kargo
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_kargo
+  failed_when:
+    - brew_kargo is failed
+    - "'Error:' in (brew_kargo.msg | default(''))"
+
+- name: Set argocd/kargo arch for Linux
+  ansible.builtin.set_fact:
+    gitops_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+  when: ansible_os_family == "Debian"
+
+- name: Check if argocd is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/argocd
+  register: argocd_bin
+  when: ansible_os_family == "Debian"
+
+- name: Install argocd (Debian)
+  ansible.builtin.get_url:
+    url: "https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-{{ gitops_arch }}"
+    dest: /usr/local/bin/argocd
+    mode: "0755"
+  become: true
+  when:
+    - ansible_os_family == "Debian"
+    - not argocd_bin.stat.exists
+
+- name: Check if kargo is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/kargo
+  register: kargo_bin
+  when: ansible_os_family == "Debian"
+
+- name: Install kargo (Debian)
+  ansible.builtin.get_url:
+    url: "https://github.com/akuity/kargo/releases/latest/download/kargo-linux-{{ gitops_arch }}"
+    dest: /usr/local/bin/kargo
+    mode: "0755"
+  become: true
+  when:
+    - ansible_os_family == "Debian"
+    - not kargo_bin.stat.exists

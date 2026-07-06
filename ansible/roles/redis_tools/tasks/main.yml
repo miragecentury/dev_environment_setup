@@ -1,0 +1,17 @@
+---
+- name: Install redis (macOS)
+  community.general.homebrew:
+    name: redis
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_redis
+  failed_when:
+    - brew_redis is failed
+    - "'Error:' in (brew_redis.msg | default(''))"
+
+- name: Install redis-tools (Debian)
+  ansible.builtin.apt:
+    name: redis-tools
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"

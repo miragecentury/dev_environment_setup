@@ -1,0 +1,22 @@
+---
+- name: Check Touch ID PAM module availability
+  ansible.builtin.stat:
+    path: "{{ item }}"
+  loop:
+    - /usr/lib/pam/pam_tid.so
+    - /usr/lib/pam/pam_tid.so.2
+  register: pam_tid_stats
+
+- name: Enable Touch ID for sudo
+  ansible.builtin.copy:
+    dest: /etc/pam.d/sudo_local
+    content: |
+      # Local sudo auth overrides (managed by dev_environment_setup)
+      auth       sufficient     pam_tid.so
+    mode: "0444"
+    owner: root
+    group: wheel
+  become: true
+  when:
+    - sudo_touchid | default(true) | bool
+    - pam_tid_stats.results | map(attribute='stat.exists') | select | list | length > 0

@@ -1,0 +1,15 @@
+---
+- name: Miragecentury — pre-clone GitHub repos
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  vars_files:
+    - group_vars/all.yml
+    - group_vars/miragecentury.yml
+  pre_tasks:
+    - name: Deploy SSH config for GitHub
+      ansible.builtin.include_role:
+        name: security
+        tasks_from: ssh_config.yml
+  roles:
+    - role: preclone_repos

@@ -1,0 +1,28 @@
+---
+# Pre-clone DeerHide / laelidona repos (requires SSH access to GitHub)
+preclone_repos_base: "{{ ansible_env.HOME }}/projects/github"
+preclone_repos_ssh_host: github.com
+preclone_repos:
+  - DeerHide/agent_skills
+  - miragecentury/dev_environment_setup
+  - DeerHide/fastapi_factory_utilities
+  - laelidona/velmios_lib
+  - laelidona/velmios_knowledge
+  - laelidona/customer_backend
+  - laelidona/notification_backend
+  - laelidona/booking_backend
+  - laelidona/payment_backend
+  - laelidona/content_backend
+  - laelidona/review-backend
+  - laelidona/content_sync_backend
+  - laelidona/instagram_integration_backend
+  - laelidona/tiktok_integration_backend
+  - laelidona/youtube_integration_backend
+  - laelidona/instagram_helper_cli
+  - laelidona/velmios_terminal_client
+  - laelidona/auth_velmios_io
+  - laelidona/public_site_template_frontend
+  - laelidona/public_website
+  - laelidona/taskiq-dependencies
+  - laelidona/video_cut_analyzer_experimental
+  - laelidona/velmios-services-gitops

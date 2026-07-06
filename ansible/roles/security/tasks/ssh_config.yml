@@ -1,0 +1,23 @@
+---
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.ssh"
+    state: directory
+    mode: "0700"
+
+- name: Deploy ssh config
+  ansible.builtin.template:
+    src: ssh_config.j2
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    mode: "0600"
+
+- name: Load SSH keys whose passphrases are already in the Keychain
+  ansible.builtin.command: ssh-add --apple-load-keychain
+  register: ssh_load
+  changed_when: "'Identity added' in (ssh_load.stderr | default(''))"
+  # The ssh_config (UseKeychain yes / AddKeysToAgent yes) captures each key's
+  # passphrase into the Keychain on first connect; this only pre-loads what's
+  # already cached, so it never prompts.
+  # ponytail: fresh machines load nothing here until the first SSH/git connect.
+  failed_when: false
+  when: ansible_os_family == "Darwin"

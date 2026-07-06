@@ -1,0 +1,63 @@
+---
+- name: Install mongosh (macOS)
+  community.general.homebrew:
+    name: mongosh
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_mongosh
+  failed_when:
+    - brew_mongosh is failed
+    - "'Error:' in (brew_mongosh.msg | default(''))"
+
+- name: Ensure apt keyrings directory exists (Debian)
+  ansible.builtin.file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: "0755"
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Download MongoDB apt key (Debian)
+  ansible.builtin.get_url:
+    url: "https://www.mongodb.org/static/pgp/server-{{ mongodb_apt_version }}.asc"
+    dest: "/tmp/mongodb-server-{{ mongodb_apt_version }}.asc"
+    mode: "0644"
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Dearmor MongoDB apt key (Debian)
+  ansible.builtin.command:
+    argv:
+      - gpg
+      - --dearmor
+      - -o
+      - "/etc/apt/keyrings/mongodb-server-{{ mongodb_apt_version }}.gpg"
+      - "/tmp/mongodb-server-{{ mongodb_apt_version }}.asc"
+    creates: "/etc/apt/keyrings/mongodb-server-{{ mongodb_apt_version }}.gpg"
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Set MongoDB apt repository (Debian)
+  ansible.builtin.set_fact:
+    mongodb_apt_repo: >-
+      deb [ arch=amd64,arm64 signed-by=/etc/apt/keyrings/mongodb-server-{{ mongodb_apt_version }}.gpg ]
+      https://repo.mongodb.org/apt/{{ 'ubuntu' if ansible_distribution == 'Ubuntu' else 'debian' }}
+      {{ ansible_distribution_release if ansible_distribution == 'Ubuntu' else 'bookworm' }}/mongodb-org/{{ mongodb_apt_version }}
+      {{ 'multiverse' if ansible_distribution == 'Ubuntu' else 'main' }}
+  when: ansible_os_family == "Debian"
+
+- name: Add MongoDB apt repository (Debian)
+  ansible.builtin.apt_repository:
+    repo: "{{ mongodb_apt_repo }}"
+    filename: "mongodb-org-{{ mongodb_apt_version }}"
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Install mongosh (Debian)
+  ansible.builtin.apt:
+    name: mongodb-mongosh
+    state: present
+    update_cache: true
+  become: true
+  when: ansible_os_family == "Debian"

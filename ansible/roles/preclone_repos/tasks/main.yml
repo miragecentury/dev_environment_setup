@@ -1,0 +1,22 @@
+---
+- name: Ensure pre-clone base directory exists
+  ansible.builtin.file:
+    path: "{{ preclone_repos_base }}"
+    state: directory
+    mode: "0755"
+  when: preclone_repos | length > 0
+
+- name: Ensure org directories exist
+  ansible.builtin.file:
+    path: "{{ preclone_repos_base }}/{{ item.split('/')[0] }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ preclone_repos | map('regex_replace', '/.*', '') | unique | list }}"
+  when: preclone_repos | length > 0
+
+- name: Pre-clone configured GitHub repos
+  ansible.builtin.git:
+    repo: "git@{{ preclone_repos_ssh_host }}:{{ item }}.git"
+    dest: "{{ preclone_repos_base }}/{{ item.split('/')[0] }}/{{ item.split('/')[1] }}"
+    accept_hostkey: true
+  loop: "{{ preclone_repos }}"

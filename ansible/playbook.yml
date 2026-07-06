@@ -7,6 +7,10 @@
   gather_facts: true
   vars:
     username: "{{ lookup('env', 'USER') }}"
+  pre_tasks:
+    - name: Configure Touch ID for sudo when available
+      ansible.builtin.include_tasks: roles/security/tasks/touchid.yml
+      when: ansible_os_family == "Darwin"
   roles:
     - role: homebrew
     - role: tools
@@ -20,3 +24,8 @@
     - role: ai_tools
     - role: security
     - role: kubernetes
+    - role: mirrord
+    - role: mongosh
+    - role: redis_tools
+    - role: cilium_tools
+    - role: argocd_kargo_tools

@@ -1,3 +1,10 @@
+Host github.com
+  HostName ssh.github.com
+  Port 443
+  User git
+  IdentitiesOnly yes
+  IdentityFile {{ github_ssh_identity | replace('~', ansible_env.HOME) }}
+
 Host *
   AddKeysToAgent yes
   UseKeychain yes

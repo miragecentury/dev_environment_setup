@@ -1,0 +1,40 @@
+---
+- name: Install cilium-cli (macOS)
+  community.general.homebrew:
+    name: cilium-cli
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_cilium
+  failed_when:
+    - brew_cilium is failed
+    - "'Error:' in (brew_cilium.msg | default(''))"
+
+- name: Set cilium-cli arch for Linux
+  ansible.builtin.set_fact:
+    cilium_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+  when: ansible_os_family == "Debian"
+
+- name: Check if cilium is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/cilium
+  register: cilium_bin
+  when: ansible_os_family == "Debian"
+
+- name: Retrieve cilium-cli stable version
+  ansible.builtin.uri:
+    url: https://raw.githubusercontent.com/cilium/cilium-cli/main/stable.txt
+    return_content: true
+  register: cilium_version
+  changed_when: false
+  when: ansible_os_family == "Debian"
+
+- name: Install cilium-cli (Debian)
+  ansible.builtin.unarchive:
+    src: "https://github.com/cilium/cilium-cli/releases/download/{{ cilium_version.content | trim }}/cilium-linux-{{ cilium_arch }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    mode: "0755"
+  become: true
+  when:
+    - ansible_os_family == "Debian"
+    - not cilium_bin.stat.exists

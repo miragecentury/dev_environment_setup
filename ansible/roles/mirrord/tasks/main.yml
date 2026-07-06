@@ -1,0 +1,41 @@
+---
+- name: Tap mirrord Homebrew repository (macOS)
+  community.general.homebrew_tap:
+    name: metalbear-co/mirrord
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Trust mirrord Homebrew tap (macOS)
+  ansible.builtin.command:
+    argv:
+      - brew
+      - trust
+      - --tap
+      - metalbear-co/mirrord
+  changed_when: false
+  when: ansible_os_family == "Darwin"
+
+- name: Install mirrord (macOS)
+  community.general.homebrew:
+    name: mirrord
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_mirrord
+  failed_when:
+    - brew_mirrord is failed
+    - "'Error:' in (brew_mirrord.msg | default(''))"
+
+- name: Check if mirrord is on PATH (Debian)
+  ansible.builtin.command: which mirrord
+  register: mirrord_which
+  ignore_errors: true
+  changed_when: false
+  when: ansible_os_family == "Debian"
+
+- name: Install mirrord (Debian)
+  ansible.builtin.shell:
+    cmd: curl -fsSL {{ mirrord_install_script }} | sh
+  when:
+    - ansible_os_family == "Debian"
+    - mirrord_which.rc != 0
+  changed_when: true
