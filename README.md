@@ -6,15 +6,15 @@ Installs and configures:
 
 - **zsh** with Zinit (plugin manager, self-bootstrapping) and Oh My Posh (prompt)
 - **GPG + SSH agents** with macOS Keychain auto-unlock when available
-- **kubectl** with krew plugins `ctx` and `ns` (aliases `kctx` / `kns`)
+- **kubectl** with krew plugins `ctx` and `ns` (aliases `kctx` / `kns`; interactive fuzzy picker via `fzf`)
 - **Helm** — Kubernetes package manager
 - **mirrord** — run local processes against a remote Kubernetes cluster
 - **mongosh** — MongoDB shell
 - **Redis** — `redis-cli` and related tools
 - **Cilium** — `cilium` CLI
 - **Argo CD / Kargo** — `argocd` and `kargo` CLIs
-- **Secrets tooling** — `sops`, `age`, and `kubeseal`
-- **Podman** — OCI container runtime
+- **Secrets tooling** — `sops`, `age`, `kubeseal`, and `vault`
+- **Podman** — OCI container runtime with Compose support
 - **Classic CLI tools** (`htop`, `dig`, `nmap`, `jq`, `mtr`, …)
 - **Python tooling** — Poetry, uv, and pre-commit
 - **Rust tooling** — rustup with stable toolchain (`rustc`, `cargo`, `rustfmt`)

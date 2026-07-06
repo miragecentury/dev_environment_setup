@@ -45,14 +45,14 @@ exec zsh
 | kubectl | Homebrew | binary download |
 | helm | Homebrew | get.helm.sh tarball |
 | talosctl | Homebrew | binary download |
-| kctx / kns | krew `ctx` + `ns` plugins | krew `ctx` + `ns` plugins |
+| kctx / kns | krew `ctx` + `ns` plugins + `fzf` (interactive picker) | krew `ctx` + `ns` plugins + `fzf` (interactive picker) |
 | mirrord | Homebrew (`metalbear-co/mirrord`) | install script |
 | mongosh | Homebrew | MongoDB apt repo |
 | Redis (`redis-cli`) | Homebrew (`redis`) | apt (`redis-tools`) |
 | Cilium CLI | Homebrew (`cilium-cli`) | GitHub release tarball |
 | Argo CD / Kargo CLIs | Homebrew | GitHub release binaries |
-| Secrets (`sops`, `age`, `kubeseal`) | Homebrew | apt (`age`) + GitHub releases |
-| Podman | Homebrew (+ `krunkit` tap on Apple Silicon) | apt |
+| Secrets (`sops`, `age`, `kubeseal`, `vault`) | Homebrew (`hashicorp/tap`) | apt (`age`) + GitHub / HashiCorp releases |
+| Podman / Compose | Homebrew (+ `krunkit` tap on Apple Silicon) | apt |
 | CLI tools (`htop`, `dig`, `nmap`, …) | Homebrew | apt |
 | Poetry / uv / pre-commit | Homebrew | pipx + uv install script |
 | Rust (`rustc`, `cargo`) | rustup install script | rustup install script |
@@ -114,6 +114,9 @@ configured by the main playbook via `ssh_identities`).
 oh-my-posh --version
 echo $SHELL          # should end in /zsh
 kubectl krew list    # should include ctx and ns
+fzf --version        # should print the fzf version
+kctx                 # should open an interactive context picker (requires a kubeconfig)
+kns                  # should open an interactive namespace picker (requires a cluster)
 helm version                # should print the Helm version
 talosctl version --client   # should print the talosctl version
 mirrord --version           # should print the mirrord version
@@ -125,7 +128,9 @@ kargo version --client      # should print the kargo CLI version
 sops --version              # should print the SOPS version
 age --version               # should print the age version
 kubeseal --version          # should print the kubeseal version
+vault version               # should print the Vault version
 podman --version            # should print the Podman version
+podman-compose --version    # should print the podman-compose version
 gh --version                # should print the GitHub CLI version
 poetry --version            # should print the Poetry version
 uv --version                # should print the uv version
