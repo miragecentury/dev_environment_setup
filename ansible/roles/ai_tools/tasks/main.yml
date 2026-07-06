@@ -1,0 +1,87 @@
+---
+- name: Install RTK
+  ansible.builtin.shell:
+    cmd: curl -fsSL {{ rtk_install_script }} | sh
+    creates: "{{ ansible_env.HOME }}/.local/bin/rtk"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+  changed_when: true
+
+- name: Verify RTK is Token Killer
+  ansible.builtin.command: rtk gain
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+  changed_when: false
+
+- name: Initialize RTK globally
+  when: rtk_init_global | bool
+  ansible.builtin.command:
+    argv:
+      - "{{ ansible_env.HOME }}/.local/bin/rtk"
+      - init
+      - -g
+      - --auto-patch
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+  register: rtk_init
+  changed_when: rtk_init.rc == 0
+
+- name: Install CodeGraph CLI
+  ansible.builtin.shell:
+    cmd: curl -fsSL {{ codegraph_install_script }} | sh
+    creates: "{{ ansible_env.HOME }}/.local/bin/codegraph"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+  changed_when: true
+
+- name: Wire CodeGraph into AI agents
+  ansible.builtin.command:
+    argv:
+      - "{{ ansible_env.HOME }}/.local/bin/codegraph"
+      - install
+      - --yes
+      - --target=auto
+      - --location=global
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.HOME }}/.local/bin:{{ ansible_env.PATH }}"
+  register: codegraph_agents
+  changed_when: codegraph_agents.rc == 0
+
+- name: Install caveman skills globally
+  ansible.builtin.command:
+    argv:
+      - npx
+      - --yes
+      - skills
+      - add
+      - "{{ caveman_skills_repo }}"
+      - --all
+      - -g
+      - -y
+      - --copy
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
+  register: caveman_skills_install
+  changed_when: "'Done!' in (caveman_skills_install.stdout | default(''))"
+
+- name: Install ponytail skills globally
+  ansible.builtin.command:
+    argv:
+      - npx
+      - --yes
+      - skills
+      - add
+      - "{{ ponytail_skills_repo }}"
+      - --all
+      - -g
+      - -y
+      - --copy
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
+  register: ponytail_skills_install
+  changed_when: "'Done!' in (ponytail_skills_install.stdout | default(''))"
