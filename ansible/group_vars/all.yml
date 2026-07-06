@@ -29,6 +29,7 @@ debian_cli_packages:
   - watch
   - ripgrep
   - fd-find
+  - fzf
   - wget
 
 homebrew_cli_packages:
@@ -39,6 +40,7 @@ homebrew_cli_packages:
   - mtr
   - ripgrep
   - fd
+  - fzf
   - wget
 
 homebrew_python_tools:
