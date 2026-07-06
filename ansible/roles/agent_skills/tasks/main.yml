@@ -1,0 +1,37 @@
+---
+- name: Install Node.js (Debian)
+  ansible.builtin.apt:
+    name:
+      - nodejs
+      - npm
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Install Node.js (macOS)
+  community.general.homebrew:
+    name: node
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_node
+  failed_when:
+    - brew_node is failed
+    - "'Error:' in (brew_node.msg | default(''))"
+
+- name: Install DeerHide agent skills globally
+  ansible.builtin.command:
+    argv:
+      - npx
+      - --yes
+      - skills
+      - add
+      - "{{ agent_skills_repo }}"
+      - --all
+      - -g
+      - -y
+      - --copy
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
+  register: agent_skills_install
+  changed_when: "'Done!' in (agent_skills_install.stdout | default(''))"
