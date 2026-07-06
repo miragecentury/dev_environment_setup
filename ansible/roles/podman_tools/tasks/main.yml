@@ -31,9 +31,11 @@
     - brew_krunkit is failed
     - "'Error:' in (brew_krunkit.msg | default(''))"
 
-- name: Install podman (macOS)
+- name: Install podman and podman-compose (macOS)
   community.general.homebrew:
-    name: podman
+    name:
+      - podman
+      - podman-compose
     state: present
   when: ansible_os_family == "Darwin"
   register: brew_podman
@@ -41,9 +43,11 @@
     - brew_podman is failed
     - "'Error:' in (brew_podman.msg | default(''))"
 
-- name: Install podman (Debian)
+- name: Install podman and podman-compose (Debian)
   ansible.builtin.apt:
-    name: podman
+    name:
+      - podman
+      - podman-compose
     state: present
   become: true
   when: ansible_os_family == "Debian"
