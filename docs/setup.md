@@ -43,6 +43,7 @@ exec zsh
 | GPG agent | pinentry-mac + Keychain | default pinentry |
 | SSH agent | Keychain (`UseKeychain`) | keychain tool + Zinit-loaded OMZ plugins |
 | kubectl | Homebrew | binary download |
+| helm | Homebrew | get.helm.sh tarball |
 | talosctl | Homebrew | binary download |
 | kctx / kns | krew `ctx` + `ns` plugins | krew `ctx` + `ns` plugins |
 | mirrord | Homebrew (`metalbear-co/mirrord`) | install script |
@@ -50,6 +51,7 @@ exec zsh
 | Redis (`redis-cli`) | Homebrew (`redis`) | apt (`redis-tools`) |
 | Cilium CLI | Homebrew (`cilium-cli`) | GitHub release tarball |
 | Argo CD / Kargo CLIs | Homebrew | GitHub release binaries |
+| Secrets (`sops`, `age`, `kubeseal`) | Homebrew | apt (`age`) + GitHub releases |
 | CLI tools (`htop`, `dig`, `nmap`, …) | Homebrew | apt |
 | Poetry / uv / pre-commit | Homebrew | pipx + uv install script |
 | Rust (`rustc`, `cargo`) | rustup install script | rustup install script |
@@ -111,6 +113,7 @@ configured by the main playbook via `ssh_identities`).
 oh-my-posh --version
 echo $SHELL          # should end in /zsh
 kubectl krew list    # should include ctx and ns
+helm version                # should print the Helm version
 talosctl version --client   # should print the talosctl version
 mirrord --version           # should print the mirrord version
 mongosh --version           # should print the mongosh version
@@ -118,6 +121,9 @@ redis-cli --version         # should print the redis-cli version
 cilium version --client     # should print the cilium CLI version
 argocd version --client     # should print the argocd CLI version
 kargo version --client      # should print the kargo CLI version
+sops --version              # should print the SOPS version
+age --version               # should print the age version
+kubeseal --version          # should print the kubeseal version
 gh --version                # should print the GitHub CLI version
 poetry --version            # should print the Poetry version
 uv --version                # should print the uv version
