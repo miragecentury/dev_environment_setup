@@ -1,10 +1,17 @@
 ---
+- name: Tap hashicorp Homebrew repository (macOS)
+  community.general.homebrew_tap:
+    name: hashicorp/tap
+    state: present
+  when: ansible_os_family == "Darwin"
+
 - name: Install secrets tools (macOS)
   community.general.homebrew:
     name:
       - sops
       - age
       - kubeseal
+      - hashicorp/tap/vault
     state: present
   when: ansible_os_family == "Darwin"
   register: brew_secrets
@@ -78,3 +85,31 @@
   when:
     - ansible_os_family == "Debian"
     - not kubeseal_bin.stat.exists
+
+- name: Check if vault is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/vault
+  register: vault_bin
+  when: ansible_os_family == "Debian"
+
+- name: Retrieve latest vault version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/hashicorp/vault/releases/latest
+    return_content: true
+  register: vault_release
+  changed_when: false
+  when:
+    - ansible_os_family == "Debian"
+    - not vault_bin.stat.exists
+
+- name: Install vault (Debian)
+  ansible.builtin.unarchive:
+    src: >-
+      https://releases.hashicorp.com/vault/{{ vault_release.json.tag_name | regex_replace('^v', '') }}/vault_{{ vault_release.json.tag_name | regex_replace('^v', '') }}_linux_{{ secrets_arch }}.zip
+    dest: /usr/local/bin
+    remote_src: true
+    mode: "0755"
+  become: true
+  when:
+    - ansible_os_family == "Debian"
+    - not vault_bin.stat.exists
