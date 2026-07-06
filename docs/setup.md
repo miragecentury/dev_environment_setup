@@ -46,6 +46,9 @@ exec zsh
 | talosctl | Homebrew | binary download |
 | kctx / kns | krew `ctx` + `ns` plugins | krew `ctx` + `ns` plugins |
 | CLI tools (`htop`, `dig`, `nmap`, …) | Homebrew | apt |
+| Poetry / uv / pre-commit | Homebrew | pipx + uv install script |
+| Rust (`rustc`, `cargo`) | rustup install script | rustup install script |
+| Angular CLI / Vite / TypeScript / ESLint / Prettier | npm global (Node via Homebrew) | npm global (Node via apt) |
 | DeerHide agent skills | `npx skills add` (Node via Homebrew) | `npx skills add` (Node via apt) |
 | RTK / CodeGraph / caveman / ponytail | install scripts + `npx skills add` | install scripts + `npx skills add` |
 | GitHub CLI (`gh`) | Homebrew | official apt repo |
@@ -92,6 +95,17 @@ echo $SHELL          # should end in /zsh
 kubectl krew list    # should include ctx and ns
 talosctl version --client   # should print the talosctl version
 gh --version                # should print the GitHub CLI version
+poetry --version            # should print the Poetry version
+uv --version                # should print the uv version
+pre-commit --version        # should print the pre-commit version
+rustc --version             # should print the Rust compiler version
+cargo --version             # should print the Cargo version
+ng version                  # should print the Angular CLI version
+vite --version              # should print the Vite version
+tsc --version               # should print the TypeScript compiler version
+tsx --version               # should print the tsx version
+eslint --version            # should print the ESLint version
+prettier --version          # should print the Prettier version
 ssh-add -l           # macOS: keys listed without passphrase prompt after Keychain setup
 fc-list | grep -i meslo   # macOS: confirms the Nerd Font is installed
 ```

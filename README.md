@@ -8,6 +8,9 @@ Installs and configures:
 - **GPG + SSH agents** with macOS Keychain auto-unlock when available
 - **kubectl** with krew plugins `ctx` and `ns` (aliases `kctx` / `kns`)
 - **Classic CLI tools** (`htop`, `dig`, `nmap`, `jq`, `mtr`, …)
+- **Python tooling** — Poetry, uv, and pre-commit
+- **Rust tooling** — rustup with stable toolchain (`rustc`, `cargo`, `rustfmt`)
+- **Frontend tooling** — Angular CLI, Vite, TypeScript (`tsc`), tsx, ESLint, Prettier
 - **DeerHide agent skills** — all skills from [DeerHide/agent_skills](https://github.com/DeerHide/agent_skills) via `npx skills`
 - **AI tooling** — [RTK](https://github.com/rtk-ai/rtk), [CodeGraph](https://github.com/colbymchenry/codegraph), [caveman](https://github.com/JuliusBrussee/caveman), [ponytail](https://github.com/dietrichgebert/ponytail) skills
 - **GitHub CLI** (`gh`)
@@ -33,6 +36,9 @@ Edit [ansible/group_vars/all.yml](ansible/group_vars/all.yml) to change:
 - SSH key paths (`ssh_identities`)
 - Optional GPG key id (`gpg_key_id`)
 - CLI tool packages (`debian_cli_packages`, `homebrew_cli_packages`)
+- Python tools (`homebrew_python_tools`, `uv_install_script`)
+- Rust install script (`rustup_install_script`)
+- Angular npm packages (`angular_npm_packages`)
 - DeerHide agent skills repo (`agent_skills_repo`)
 - AI tooling repos and scripts (`caveman_skills_repo`, `ponytail_skills_repo`, `rtk_init_global`)
 - macOS Homebrew casks (`homebrew_casks`)
