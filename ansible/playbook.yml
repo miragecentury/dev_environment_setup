@@ -10,10 +10,13 @@
   roles:
     - role: homebrew
     - role: tools
+    - role: python_tools
+    - role: rust_tools
     - role: gh
     - role: fonts
     - role: zsh
     - role: agent_skills
+    - role: angular_tools
     - role: ai_tools
     - role: security
     - role: kubernetes

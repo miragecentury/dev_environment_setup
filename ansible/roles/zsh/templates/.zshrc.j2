@@ -1,5 +1,6 @@
 export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 # GPG (Linux/WSL2 need GPG_TTY so pinentry can prompt in the terminal)
 export GPG_TTY=$(tty)

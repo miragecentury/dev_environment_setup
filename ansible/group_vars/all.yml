@@ -40,6 +40,23 @@ homebrew_cli_packages:
   - fd
   - wget
 
+homebrew_python_tools:
+  - poetry
+  - uv
+  - pre-commit
+
+uv_install_script: https://astral.sh/uv/install.sh
+
+rustup_install_script: https://sh.rustup.rs
+
+angular_npm_packages:
+  - "@angular/cli"
+  - vite
+  - typescript
+  - tsx
+  - eslint
+  - prettier
+
 # DeerHide agent skills (https://github.com/DeerHide/agent_skills)
 agent_skills_repo: DeerHide/agent_skills
 
