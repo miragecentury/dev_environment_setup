@@ -1,43 +1,43 @@
 ---
+- name: Install kubectl (macOS)
+  community.general.homebrew:
+    name: kubectl
+    state: present
+  when: ansible_os_family == "Darwin"
 
-- name: Retrieve from github the latest kubectl version
+- name: Set kubectl arch for Linux
+  ansible.builtin.set_fact:
+    kubectl_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+  when: ansible_os_family == "Debian"
+
+- name: Retrieve latest kubectl version
   ansible.builtin.uri:
-    url: https://storage.googleapis.com/kubernetes-release/release/stable.txt
+    url: https://dl.k8s.io/release/stable.txt
     return_content: true
   register: kubectl_version
   changed_when: false
+  when: ansible_os_family == "Debian"
 
-- name: Check if kubectl is installed
-  ansible.builtin.shell: kubectl version -o=json | jq -r .clientVersion.gitVersion
-  register: kubectl_version_installed
+- name: Check installed kubectl version
+  ansible.builtin.command: kubectl version --client -o json
+  register: kubectl_client_json
   ignore_errors: true
   changed_when: false
+  when: ansible_os_family == "Debian"
 
-- name: Install kubectl if version is different
+- name: Parse installed kubectl version
+  ansible.builtin.set_fact:
+    kubectl_installed_version: "{{ (kubectl_client_json.stdout | from_json).clientVersion.gitVersion }}"
+  when:
+    - ansible_os_family == "Debian"
+    - kubectl_client_json.rc == 0
+
+- name: Install kubectl (Debian)
   ansible.builtin.get_url:
-    url: https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.content }}/bin/linux/amd64/kubectl
+    url: "https://dl.k8s.io/release/{{ kubectl_version.content | trim }}/bin/linux/{{ kubectl_arch }}/kubectl"
     dest: /usr/local/bin/kubectl
-    mode: 755
-  when: kubectl_version.content != kubectl_version_installed.stdout
-
-- name: Retrive if kubectx is installed
-  ansible.builtin.shell: kubectl krew list | grep ctx
-  register: kubectx_installed
-  ignore_errors: true
-  changed_when: false
-
-- name: Install kubectx with krew
-  ansible.builtin.command: kubectl krew install ctx
-  when: kubectx_installed.rc != 0
-  changed_when: true
-
-- name: Retrive if kubens is installed
-  ansible.builtin.shell: kubectl krew list | grep ns
-  register: kubens_installed
-  ignore_errors: true
-  changed_when: false
-
-- name: Install kubens with krew
-  ansible.builtin.command: kubectl krew install ns
-  when: kubens_installed.rc != 0
-  changed_when: true
+    mode: "0755"
+  become: true
+  when:
+    - ansible_os_family == "Debian"
+    - kubectl_installed_version | default('') != kubectl_version.content | trim

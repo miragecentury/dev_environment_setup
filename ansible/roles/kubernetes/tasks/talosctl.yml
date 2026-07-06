@@ -1,0 +1,30 @@
+---
+- name: Install talosctl (macOS)
+  community.general.homebrew:
+    name: talosctl
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Set talosctl arch for Linux
+  ansible.builtin.set_fact:
+    talosctl_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+  when: ansible_os_family == "Debian"
+
+- name: Check if talosctl is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/talosctl
+  register: talosctl_bin
+  when: ansible_os_family == "Debian"
+
+- name: Install talosctl (Debian)
+  ansible.builtin.get_url:
+    url: "https://github.com/siderolabs/talos/releases/latest/download/talosctl-linux-{{ talosctl_arch }}"
+    dest: /usr/local/bin/talosctl
+    mode: "0755"
+  become: true
+  # ponytail: naive "install if missing" — re-runs won't upgrade it. Delete
+  # /usr/local/bin/talosctl to refresh on Debian (avoids re-downloading ~90MB
+  # every run; Homebrew keeps macOS up to date on its own).
+  when:
+    - ansible_os_family == "Debian"
+    - not talosctl_bin.stat.exists

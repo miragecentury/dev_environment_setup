@@ -1,0 +1,6 @@
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+{% for identity in ssh_identities %}
+  IdentityFile {{ identity | replace('~', ansible_env.HOME) }}
+{% endfor %}

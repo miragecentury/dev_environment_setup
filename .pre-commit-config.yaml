@@ -11,7 +11,11 @@ repos:
         exclude: ansible-vars.yml
       - id: check-json
       - id: check-added-large-files
-  - repo: https://github.com/ansible/ansible-lint
-    rev: v24.6.1
+  - repo: local
     hooks:
       - id: ansible-lint
+        name: ansible-lint
+        entry: .venv/bin/ansible-lint
+        language: system
+        files: ^ansible/
+        types: [yaml]

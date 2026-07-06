@@ -1,0 +1,21 @@
+---
+- name: Install gnupg
+  ansible.builtin.package:
+    name: gnupg
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Install gnupg (macOS)
+  community.general.homebrew:
+    name: gnupg
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Include macOS security tasks
+  ansible.builtin.include_tasks: darwin.yml
+  when: ansible_os_family == "Darwin"
+
+- name: Include Debian security tasks
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_os_family == "Debian"

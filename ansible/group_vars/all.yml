@@ -1,0 +1,34 @@
+---
+# Oh My Posh theme (built-in name or path to a theme file)
+omp_theme: jandedobbeleer
+
+# SSH keys to load into the agent (paths relative to home)
+ssh_identities:
+  - ~/.ssh/github
+  - ~/.ssh/melanie.localunicorns.info
+  - ~/.ssh/outside_cluster_tools_project_key
+
+# Optional GPG key id for keychain plugin (leave empty to skip)
+gpg_key_id: ""
+
+# macOS Homebrew casks to install
+homebrew_casks:
+  - freelens
+  - wave
+  - font-meslo-lg-nerd-font
+  - cursor-cli
+
+# Terminal font (a Nerd Font is required for the Oh My Posh prompt glyphs).
+# Must match a family installed by the font cask above.
+terminal_font: "MesloLGS Nerd Font Mono"
+
+# Apps to apply terminal_font to. Both Cursor and Wave store settings as a flat
+# JSON object, so we just merge these keys in (see the fonts role).
+terminal_font_targets:
+  - path: "{{ ansible_env.HOME }}/Library/Application Support/Cursor/User/settings.json"
+    settings:
+      "editor.fontFamily": "{{ terminal_font }}"
+      "terminal.integrated.fontFamily": "{{ terminal_font }}"
+  - path: "{{ ansible_env.HOME }}/.config/waveterm/settings.json"
+    settings:
+      "term:fontfamily": "{{ terminal_font }}"

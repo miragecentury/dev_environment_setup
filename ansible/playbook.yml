@@ -4,17 +4,12 @@
   hosts:
     - localhost
   connection: local
-  gather_facts: false
+  gather_facts: true
   vars:
     username: "{{ lookup('env', 'USER') }}"
   roles:
-    - role: dependencies
-    - role: tools
-    - role: git
+    - role: homebrew
+    - role: fonts
     - role: zsh
-      vars:
-        zsh_certificates_autoload:
-          - "~/.ssh/github"
-          - "~/.ssh/melanie.localunicorns.info"
-          - "~/.ssh/outside_cluster_tools_project_key"
+    - role: security
     - role: kubernetes

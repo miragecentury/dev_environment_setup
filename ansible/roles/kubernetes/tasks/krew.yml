@@ -1,0 +1,55 @@
+---
+- name: Check if krew is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.krew/bin/kubectl-krew"
+  register: krew_bin
+
+- name: Set krew arch
+  ansible.builtin.set_fact:
+    krew_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+    krew_os: "{{ 'darwin' if ansible_os_family == 'Darwin' else 'linux' }}"
+
+- name: Install krew
+  ansible.builtin.shell: |
+    set -o pipefail
+    tmpdir="$(mktemp -d)"
+    cd "$tmpdir"
+    curl -fsSLO "https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-{{ krew_os }}_{{ krew_arch }}.tar.gz"
+    tar zxvf "krew-{{ krew_os }}_{{ krew_arch }}.tar.gz"
+    "./krew-{{ krew_os }}_{{ krew_arch }}" install krew
+  args:
+    creates: "{{ ansible_env.HOME }}/.krew/bin/kubectl-krew"
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.krew/bin:{{ ansible_env.PATH }}"
+  when: not krew_bin.stat.exists
+  changed_when: true
+
+- name: Check if kubectx is installed
+  ansible.builtin.shell: kubectl krew list | grep -E '^ctx$'
+  register: kubectx_installed
+  ignore_errors: true
+  changed_when: false
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.krew/bin:{{ ansible_env.PATH }}"
+
+- name: Install kubectx (krew ctx)
+  ansible.builtin.command: kubectl krew install ctx
+  when: kubectx_installed.rc != 0
+  changed_when: true
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.krew/bin:{{ ansible_env.PATH }}"
+
+- name: Check if kubens is installed
+  ansible.builtin.shell: kubectl krew list | grep -E '^ns$'
+  register: kubens_installed
+  ignore_errors: true
+  changed_when: false
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.krew/bin:{{ ansible_env.PATH }}"
+
+- name: Install kubens (krew ns)
+  ansible.builtin.command: kubectl krew install ns
+  when: kubens_installed.rc != 0
+  changed_when: true
+  environment:
+    PATH: "{{ ansible_env.HOME }}/.krew/bin:{{ ansible_env.PATH }}"

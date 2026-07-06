@@ -1,0 +1,72 @@
+---
+- name: Install zsh (Debian)
+  ansible.builtin.apt:
+    name: zsh
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Install zsh (macOS)
+  community.general.homebrew:
+    name: zsh
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_zsh
+  # Recent Homebrew prints "✔︎ Bottle ..." progress to stderr, which the module
+  # misreads as a failure. A genuine brew failure always emits an "Error:" line,
+  # so only treat it as failed when that appears.
+  failed_when:
+    - brew_zsh is failed
+    - "'Error:' in (brew_zsh.msg | default(''))"
+
+- name: Check if Oh My Zsh is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
+  register: omz_dir
+
+- name: Install Oh My Zsh
+  ansible.builtin.shell: |
+    set -o pipefail
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  args:
+    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
+  when: not omz_dir.stat.exists
+  changed_when: true
+
+- name: Include Oh My Posh install tasks for macOS
+  ansible.builtin.include_tasks: darwin.yml
+  when: ansible_os_family == "Darwin"
+
+- name: Include Oh My Posh install tasks for Debian
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_os_family == "Debian"
+
+- name: Deploy .zshrc
+  ansible.builtin.template:
+    src: .zshrc.j2
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+    mode: "0644"
+
+- name: Get zsh path
+  ansible.builtin.command: which zsh
+  register: zsh_path
+  changed_when: false
+
+- name: Get current login shell (Debian)
+  ansible.builtin.command: getent passwd {{ username }}
+  register: shell_info
+  changed_when: false
+  when: ansible_os_family == "Debian"
+
+- name: Get current login shell (macOS)
+  ansible.builtin.command: dscl . -read /Users/{{ username }} UserShell
+  register: shell_info
+  changed_when: false
+  when: ansible_os_family == "Darwin"
+
+- name: Set zsh as default shell
+  ansible.builtin.user:
+    name: "{{ username }}"
+    shell: "{{ zsh_path.stdout }}"
+  become: true
+  when: "'/zsh' not in shell_info.stdout"

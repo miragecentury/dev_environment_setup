@@ -1,0 +1,29 @@
+---
+# Cursor and Wave both keep settings as a flat JSON object, so we read the
+# existing file (if any), merge our font keys over it, and write it back. This
+# preserves whatever the user already configured.
+# ponytail: parses settings.json as strict JSON. If you've hand-added // or
+# /* */ comments (JSONC), the merge fails loudly instead of corrupting the
+# file — strip the comments or set the font via the app UI in that case.
+
+- name: Ensure terminal app config directories exist
+  ansible.builtin.file:
+    path: "{{ item.path | dirname }}"
+    state: directory
+    mode: "0755"
+  loop: "{{ terminal_font_targets }}"
+  loop_control:
+    label: "{{ item.path | dirname }}"
+  when: ansible_os_family == "Darwin"
+
+- name: Set terminal font in Cursor and Wave (preserving existing settings)
+  ansible.builtin.copy:
+    dest: "{{ item.path }}"
+    content: >-
+      {{ (lookup('ansible.builtin.file', item.path, errors='ignore') or '{}')
+         | from_json | combine(item.settings) | to_nice_json }}
+    mode: "0644"
+  loop: "{{ terminal_font_targets }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when: ansible_os_family == "Darwin"

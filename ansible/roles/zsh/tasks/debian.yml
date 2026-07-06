@@ -1,0 +1,14 @@
+---
+- name: Check if Oh My Posh is installed
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/oh-my-posh"
+  register: omp_bin
+
+- name: Install Oh My Posh
+  ansible.builtin.shell: |
+    set -o pipefail
+    curl -fsSL https://ohmyposh.dev/install.sh | bash -s -- -d "{{ ansible_env.HOME }}/.local/bin"
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/oh-my-posh"
+  when: not omp_bin.stat.exists
+  changed_when: true

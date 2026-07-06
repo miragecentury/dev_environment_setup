@@ -1,0 +1,6 @@
+---
+- name: Install keychain tool
+  ansible.builtin.apt:
+    name: keychain
+    state: present
+  become: true

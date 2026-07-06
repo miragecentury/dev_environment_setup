@@ -1,0 +1,5 @@
+---
+- name: Install Oh My Posh via Homebrew
+  community.general.homebrew:
+    name: oh-my-posh
+    state: present

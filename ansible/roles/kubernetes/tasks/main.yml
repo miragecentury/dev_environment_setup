@@ -1,10 +1,9 @@
 ---
-- name: Include kubectl tasks
+- name: Include kubectl install tasks
   ansible.builtin.include_tasks: kubectl.yml
-  tags: kubectl
-- name: Include k9s tasks
-  ansible.builtin.include_tasks: k9s.yml
-  tags: k9s
-- name: Include mkcert tasks
-  ansible.builtin.include_tasks: mkcert.yml
-  tags: mkcert
+
+- name: Include talosctl install tasks
+  ansible.builtin.include_tasks: talosctl.yml
+
+- name: Include krew install tasks
+  ansible.builtin.include_tasks: krew.yml

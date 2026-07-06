@@ -1,0 +1,4 @@
+---
+- name: Include macOS Homebrew tasks
+  ansible.builtin.include_tasks: darwin.yml
+  when: ansible_os_family == "Darwin"
