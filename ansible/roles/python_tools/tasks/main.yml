@@ -1,0 +1,42 @@
+---
+- name: Install Python tools (macOS)
+  community.general.homebrew:
+    name: "{{ homebrew_python_tools }}"
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Install pipx (Debian)
+  ansible.builtin.apt:
+    name: pipx
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Install poetry (Debian)
+  ansible.builtin.command:
+    argv: [pipx, install, poetry]
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/poetry"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
+  when: ansible_os_family == "Debian"
+
+- name: Install pre-commit (Debian)
+  ansible.builtin.command:
+    argv: [pipx, install, pre-commit]
+  args:
+    creates: "{{ ansible_env.HOME }}/.local/bin/pre-commit"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
+  when: ansible_os_family == "Debian"
+
+- name: Install uv (Debian)
+  ansible.builtin.shell:
+    cmd: curl -LsSf {{ uv_install_script }} | sh
+    creates: "{{ ansible_env.HOME }}/.local/bin/uv"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+  when: ansible_os_family == "Debian"
+  changed_when: true
