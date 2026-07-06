@@ -1,0 +1,49 @@
+---
+- name: Tap krunkit Homebrew repository (macOS Apple Silicon)
+  community.general.homebrew_tap:
+    name: "{{ krunkit_homebrew_tap }}"
+    state: present
+  when:
+    - ansible_os_family == "Darwin"
+    - ansible_architecture in ["aarch64", "arm64"]
+
+- name: Trust krunkit Homebrew tap (macOS Apple Silicon)
+  ansible.builtin.command:
+    argv:
+      - brew
+      - trust
+      - --tap
+      - "{{ krunkit_homebrew_tap }}"
+  changed_when: false
+  when:
+    - ansible_os_family == "Darwin"
+    - ansible_architecture in ["aarch64", "arm64"]
+
+- name: Install krunkit (macOS Apple Silicon)
+  community.general.homebrew:
+    name: krunkit
+    state: present
+  when:
+    - ansible_os_family == "Darwin"
+    - ansible_architecture in ["aarch64", "arm64"]
+  register: brew_krunkit
+  failed_when:
+    - brew_krunkit is failed
+    - "'Error:' in (brew_krunkit.msg | default(''))"
+
+- name: Install podman (macOS)
+  community.general.homebrew:
+    name: podman
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_podman
+  failed_when:
+    - brew_podman is failed
+    - "'Error:' in (brew_podman.msg | default(''))"
+
+- name: Install podman (Debian)
+  ansible.builtin.apt:
+    name: podman
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"

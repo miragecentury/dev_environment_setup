@@ -64,6 +64,9 @@ agent_skills_repo: DeerHide/agent_skills
 # mirrord (Debian install script; macOS uses Homebrew tap)
 mirrord_install_script: https://raw.githubusercontent.com/metalbear-co/mirrord/main/scripts/install.sh
 
+# krunkit VM runtime for podman machine on macOS Apple Silicon (Homebrew tap)
+krunkit_homebrew_tap: slp/krunkit
+
 # MongoDB shell (Debian uses official MongoDB apt repo)
 mongodb_apt_version: "8.0"
 
