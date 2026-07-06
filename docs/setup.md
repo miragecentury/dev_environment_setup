@@ -26,7 +26,7 @@ On macOS, Homebrew is installed automatically if missing.
 ./scripts/run_ansible.sh
 ```
 
-You will be prompted for your sudo password. On macOS, you may also be prompted once per SSH key passphrase to store them in Keychain — after that, keys auto-unlock via the macOS vault.
+On macOS with Touch ID, `run_ansible.sh` runs `sudo -v` first (Touch ID or password in the terminal), then passes `ansible_become_flags=-H` so Ansible reuses that sudo session. Ansible’s default `-H -S -n` flags ignore the cached timestamp on macOS. On Linux, or when Touch ID is unavailable, you will be prompted for your sudo password up front via `--ask-become-pass`.
 
 ### 3. Start a new shell
 
@@ -45,6 +45,11 @@ exec zsh
 | kubectl | Homebrew | binary download |
 | talosctl | Homebrew | binary download |
 | kctx / kns | krew `ctx` + `ns` plugins | krew `ctx` + `ns` plugins |
+| mirrord | Homebrew (`metalbear-co/mirrord`) | install script |
+| mongosh | Homebrew | MongoDB apt repo |
+| Redis (`redis-cli`) | Homebrew (`redis`) | apt (`redis-tools`) |
+| Cilium CLI | Homebrew (`cilium-cli`) | GitHub release tarball |
+| Argo CD / Kargo CLIs | Homebrew | GitHub release binaries |
 | CLI tools (`htop`, `dig`, `nmap`, …) | Homebrew | apt |
 | Poetry / uv / pre-commit | Homebrew | pipx + uv install script |
 | Rust (`rustc`, `cargo`) | rustup install script | rustup install script |
@@ -81,9 +86,22 @@ settings, preserving any other settings you already have. To use a different fon
 add its cask to `homebrew_casks` and point `terminal_font` at the installed family
 name (check with `fc-list | grep -i "<name>"`).
 
+## Pre-clone GitHub repos
+
+After the main setup, pre-clone DeerHide and laelidona repositories:
+
+```bash
+./scripts/run_miragecentury.sh
+```
+
+Repos are cloned to `~/projects/github/<org>/<repo>`. Edit the repo list in
+`ansible/group_vars/miragecentury.yml`. Requires SSH access to GitHub (typically
+configured by the main playbook via `ssh_identities`).
+
 ## macOS Keychain notes
 
-- SSH: `ssh_config` sets `UseKeychain yes` / `AddKeysToAgent yes`, so the first `git`/`ssh` connect prompts once and stores the passphrase in Keychain; later runs auto-load it (the playbook also pre-loads cached keys via `ssh-add --apple-load-keychain`).
+- sudo: Touch ID is enabled via `/etc/pam.d/sudo_local` when `pam_tid` is present and `sudo_touchid: true` (default). `run_ansible.sh` runs `sudo -v` then sets `ansible_become_flags=-H` so the playbook reuses that session. Set `sudo_touchid: false` in `group_vars/all.yml` to disable.
+- SSH: `ssh_config` sets a dedicated `Host github.com` block (`IdentitiesOnly yes`, `IdentityFile` from `github_ssh_identity`, port 443 via `ssh.github.com`) so Git always uses the right key and avoids port-22 timeouts; `Host *` sets `UseKeychain yes` / `AddKeysToAgent yes` for other hosts. The first `git`/`ssh` connect prompts once and stores the passphrase in Keychain; later runs auto-load it (the playbook also pre-loads cached keys via `ssh-add --apple-load-keychain`).
 - GPG: `pinentry-mac` shows a "Save in Keychain" checkbox when unlocking your key — check it once for auto-unlock.
 - Keys that don't exist on disk are skipped silently.
 
@@ -94,6 +112,12 @@ oh-my-posh --version
 echo $SHELL          # should end in /zsh
 kubectl krew list    # should include ctx and ns
 talosctl version --client   # should print the talosctl version
+mirrord --version           # should print the mirrord version
+mongosh --version           # should print the mongosh version
+redis-cli --version         # should print the redis-cli version
+cilium version --client     # should print the cilium CLI version
+argocd version --client     # should print the argocd CLI version
+kargo version --client      # should print the kargo CLI version
 gh --version                # should print the GitHub CLI version
 poetry --version            # should print the Poetry version
 uv --version                # should print the uv version

@@ -7,6 +7,11 @@ Installs and configures:
 - **zsh** with Zinit (plugin manager, self-bootstrapping) and Oh My Posh (prompt)
 - **GPG + SSH agents** with macOS Keychain auto-unlock when available
 - **kubectl** with krew plugins `ctx` and `ns` (aliases `kctx` / `kns`)
+- **mirrord** — run local processes against a remote Kubernetes cluster
+- **mongosh** — MongoDB shell
+- **Redis** — `redis-cli` and related tools
+- **Cilium** — `cilium` CLI
+- **Argo CD / Kargo** — `argocd` and `kargo` CLIs
 - **Classic CLI tools** (`htop`, `dig`, `nmap`, `jq`, `mtr`, …)
 - **Python tooling** — Poetry, uv, and pre-commit
 - **Rust tooling** — rustup with stable toolchain (`rustc`, `cargo`, `rustfmt`)
@@ -22,8 +27,11 @@ Installs and configures:
 # 1. Bootstrap Python, Ansible, and dependencies
 ./scripts/setup.sh
 
-# 2. Run the workstation setup (will prompt for sudo password)
+# 2. Run the workstation setup (macOS: Touch ID for sudo when available; otherwise password)
 ./scripts/run_ansible.sh
+
+# 3. (Optional) Pre-clone DeerHide / laelidona GitHub repos
+./scripts/run_miragecentury.sh
 ```
 
 See [docs/setup.md](docs/setup.md) for details.
@@ -41,7 +49,11 @@ Edit [ansible/group_vars/all.yml](ansible/group_vars/all.yml) to change:
 - Angular npm packages (`angular_npm_packages`)
 - DeerHide agent skills repo (`agent_skills_repo`)
 - AI tooling repos and scripts (`caveman_skills_repo`, `ponytail_skills_repo`, `rtk_init_global`)
+- mirrord install script (`mirrord_install_script`; macOS uses Homebrew)
+- MongoDB apt version for mongosh on Debian (`mongodb_apt_version`)
 - macOS Homebrew casks (`homebrew_casks`)
+
+Edit [ansible/group_vars/miragecentury.yml](ansible/group_vars/miragecentury.yml) to change which DeerHide / laelidona repos are pre-cloned (`./scripts/run_miragecentury.sh`).
 
 ## Supported platforms
 
