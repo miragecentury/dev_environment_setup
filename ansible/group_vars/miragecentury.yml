@@ -26,3 +26,4 @@ preclone_repos:
   - laelidona/taskiq-dependencies
   - laelidona/video_cut_analyzer_experimental
   - laelidona/velmios-services-gitops
+  - laelidona/velmios-infrastructure

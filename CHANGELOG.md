@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2026-07-06
+
+### Added
+
+- mirrord role (Homebrew tap on macOS; install script on Debian)
+- mongosh role (Homebrew on macOS; MongoDB apt repo on Debian)
+- redis_tools role (`redis` via Homebrew; `redis-tools` via apt)
+- cilium_tools role (`cilium-cli` via Homebrew; GitHub release on Debian)
+- argocd_kargo_tools role (`argocd` and `kargo` via Homebrew; GitHub releases on Debian)
+- miragecentury pre-clone playbook and `run_miragecentury.sh` for DeerHide / laelidona GitHub repos
+- Touch ID sudo support on macOS via shared `ansible_become_args.sh` helper
+
+### Changed
+
+- SSH config uses a dedicated `Host github.com` block with `IdentitiesOnly`, `github_ssh_identity`, and port 443 via `ssh.github.com`
+
 ## [1.3.0] - 2026-07-06
 
 ### Added
@@ -42,7 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Cross-platform Ansible workstation setup for macOS and Debian
 
-[Unreleased]: https://github.com/miragecentury/dev_environment_setup/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/miragecentury/dev_environment_setup/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.0.0...v1.1.0
