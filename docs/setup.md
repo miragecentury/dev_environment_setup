@@ -38,13 +38,16 @@ exec zsh
 
 | Component | macOS | Debian/Ubuntu |
 |-----------|-------|-----------------|
-| zsh + Oh My Zsh | Homebrew | apt |
+| zsh + Zinit | Homebrew | apt |
 | Oh My Posh prompt | Homebrew | official installer |
 | GPG agent | pinentry-mac + Keychain | default pinentry |
-| SSH agent | Keychain (`UseKeychain`) | keychain tool + OMZ plugins |
+| SSH agent | Keychain (`UseKeychain`) | keychain tool + Zinit-loaded OMZ plugins |
 | kubectl | Homebrew | binary download |
 | talosctl | Homebrew | binary download |
 | kctx / kns | krew `ctx` + `ns` plugins | krew `ctx` + `ns` plugins |
+| CLI tools (`htop`, `dig`, `nmap`, …) | Homebrew | apt |
+| DeerHide agent skills | `npx skills add` (Node via Homebrew) | `npx skills add` (Node via apt) |
+| RTK / CodeGraph / caveman / ponytail | install scripts + `npx skills add` | install scripts + `npx skills add` |
 | GitHub CLI (`gh`) | Homebrew | official apt repo |
 | Homebrew + casks | Homebrew, FreeLens, Wave, Cursor CLI | — |
 | Terminal font | Meslo Nerd Font cask + set in Cursor & Wave | — |
@@ -54,7 +57,7 @@ exec zsh
 Edit `ansible/group_vars/all.yml`:
 
 ```yaml
-omp_theme: jandedobbeleer
+omp_config: "{{ ansible_env.HOME }}/.config/oh-my-posh/config.toml"
 ssh_identities:
   - ~/.ssh/github
   - ~/.ssh/my-other-key
