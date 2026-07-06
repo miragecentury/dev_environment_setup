@@ -52,6 +52,7 @@ exec zsh
 | Cilium CLI | Homebrew (`cilium-cli`) | GitHub release tarball |
 | Argo CD / Kargo CLIs | Homebrew | GitHub release binaries |
 | Secrets (`sops`, `age`, `kubeseal`) | Homebrew | apt (`age`) + GitHub releases |
+| Podman | Homebrew (+ `krunkit` tap on Apple Silicon) | apt |
 | CLI tools (`htop`, `dig`, `nmap`, …) | Homebrew | apt |
 | Poetry / uv / pre-commit | Homebrew | pipx + uv install script |
 | Rust (`rustc`, `cargo`) | rustup install script | rustup install script |
@@ -124,6 +125,7 @@ kargo version --client      # should print the kargo CLI version
 sops --version              # should print the SOPS version
 age --version               # should print the age version
 kubeseal --version          # should print the kubeseal version
+podman --version            # should print the Podman version
 gh --version                # should print the GitHub CLI version
 poetry --version            # should print the Poetry version
 uv --version                # should print the uv version

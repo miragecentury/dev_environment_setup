@@ -14,6 +14,7 @@ Installs and configures:
 - **Cilium** — `cilium` CLI
 - **Argo CD / Kargo** — `argocd` and `kargo` CLIs
 - **Secrets tooling** — `sops`, `age`, and `kubeseal`
+- **Podman** — OCI container runtime
 - **Classic CLI tools** (`htop`, `dig`, `nmap`, `jq`, `mtr`, …)
 - **Python tooling** — Poetry, uv, and pre-commit
 - **Rust tooling** — rustup with stable toolchain (`rustc`, `cargo`, `rustfmt`)
