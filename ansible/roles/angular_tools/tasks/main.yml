@@ -1,0 +1,10 @@
+---
+- name: Install frontend npm tools globally
+  community.general.npm:
+    name: "{{ item }}"
+    global: true
+    state: present
+  loop: "{{ angular_npm_packages }}"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
