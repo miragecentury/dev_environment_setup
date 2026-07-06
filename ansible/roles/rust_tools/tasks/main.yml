@@ -1,0 +1,8 @@
+---
+- name: Install Rust toolchain
+  ansible.builtin.shell:
+    cmd: curl --proto '=https' --tlsv1.2 -sSf {{ rustup_install_script }} | sh -s -- -y --default-toolchain stable
+    creates: "{{ ansible_env.HOME }}/.cargo/bin/rustc"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+  changed_when: true
