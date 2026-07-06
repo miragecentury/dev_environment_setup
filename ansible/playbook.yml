@@ -9,6 +9,7 @@
     username: "{{ lookup('env', 'USER') }}"
   roles:
     - role: homebrew
+    - role: gh
     - role: fonts
     - role: zsh
     - role: security

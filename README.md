@@ -7,6 +7,7 @@ Installs and configures:
 - **zsh** with Oh My Zsh (plugins) and Oh My Posh (prompt)
 - **GPG + SSH agents** with macOS Keychain auto-unlock when available
 - **kubectl** with krew plugins `ctx` and `ns` (aliases `kctx` / `kns`)
+- **GitHub CLI** (`gh`)
 - **Homebrew** (macOS) with casks FreeLens and Wave
 
 ## Quick start

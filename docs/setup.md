@@ -45,6 +45,7 @@ exec zsh
 | kubectl | Homebrew | binary download |
 | talosctl | Homebrew | binary download |
 | kctx / kns | krew `ctx` + `ns` plugins | krew `ctx` + `ns` plugins |
+| GitHub CLI (`gh`) | Homebrew | official apt repo |
 | Homebrew + casks | Homebrew, FreeLens, Wave, Cursor CLI | — |
 | Terminal font | Meslo Nerd Font cask + set in Cursor & Wave | — |
 
@@ -87,6 +88,7 @@ oh-my-posh --version
 echo $SHELL          # should end in /zsh
 kubectl krew list    # should include ctx and ns
 talosctl version --client   # should print the talosctl version
+gh --version                # should print the GitHub CLI version
 ssh-add -l           # macOS: keys listed without passphrase prompt after Keychain setup
 fc-list | grep -i meslo   # macOS: confirms the Nerd Font is installed
 ```
