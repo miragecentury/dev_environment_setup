@@ -1,0 +1,80 @@
+---
+- name: Install secrets tools (macOS)
+  community.general.homebrew:
+    name:
+      - sops
+      - age
+      - kubeseal
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_secrets
+  failed_when:
+    - brew_secrets is failed
+    - "'Error:' in (brew_secrets.msg | default(''))"
+
+- name: Install age (Debian)
+  ansible.builtin.apt:
+    name: age
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Set secrets tools arch for Linux
+  ansible.builtin.set_fact:
+    secrets_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+  when: ansible_os_family == "Debian"
+
+- name: Check if sops is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/sops
+  register: sops_bin
+  when: ansible_os_family == "Debian"
+
+- name: Retrieve latest sops version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/getsops/sops/releases/latest
+    return_content: true
+  register: sops_release
+  changed_when: false
+  when:
+    - ansible_os_family == "Debian"
+    - not sops_bin.stat.exists
+
+- name: Install sops (Debian)
+  ansible.builtin.get_url:
+    url: >-
+      https://github.com/getsops/sops/releases/download/{{ sops_release.json.tag_name }}/sops-{{ sops_release.json.tag_name }}.linux.{{ secrets_arch }}
+    dest: /usr/local/bin/sops
+    mode: "0755"
+  become: true
+  when:
+    - ansible_os_family == "Debian"
+    - not sops_bin.stat.exists
+
+- name: Check if kubeseal is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/kubeseal
+  register: kubeseal_bin
+  when: ansible_os_family == "Debian"
+
+- name: Retrieve latest kubeseal version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/bitnami/sealed-secrets/releases/latest
+    return_content: true
+  register: kubeseal_release
+  changed_when: false
+  when:
+    - ansible_os_family == "Debian"
+    - not kubeseal_bin.stat.exists
+
+- name: Install kubeseal (Debian)
+  ansible.builtin.unarchive:
+    src: >-
+      https://github.com/bitnami/sealed-secrets/releases/download/{{ kubeseal_release.json.tag_name }}/kubeseal-{{ kubeseal_release.json.tag_name | regex_replace('^v', '') }}-linux-{{ secrets_arch }}.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
+    mode: "0755"
+  become: true
+  when:
+    - ansible_os_family == "Debian"
+    - not kubeseal_bin.stat.exists

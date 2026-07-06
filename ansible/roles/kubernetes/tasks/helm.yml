@@ -1,0 +1,42 @@
+---
+- name: Install helm (macOS)
+  community.general.homebrew:
+    name: helm
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Set helm arch for Linux
+  ansible.builtin.set_fact:
+    helm_arch: "{{ 'arm64' if ansible_architecture in ['aarch64', 'arm64'] else 'amd64' }}"
+  when: ansible_os_family == "Debian"
+
+- name: Check if helm is installed (Debian)
+  ansible.builtin.stat:
+    path: /usr/local/bin/helm
+  register: helm_bin
+  when: ansible_os_family == "Debian"
+
+- name: Retrieve latest helm version
+  ansible.builtin.uri:
+    url: https://api.github.com/repos/helm/helm/releases/latest
+    return_content: true
+  register: helm_release
+  changed_when: false
+  when:
+    - ansible_os_family == "Debian"
+    - not helm_bin.stat.exists
+
+- name: Install helm (Debian)
+  ansible.builtin.unarchive:
+    src: "https://get.helm.sh/helm-{{ helm_release.json.tag_name }}-linux-{{ helm_arch }}.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+    extra_opts:
+      - "--strip-components=1"
+    mode: "0755"
+  become: true
+  # ponytail: naive "install if missing" — re-runs won't upgrade it. Delete
+  # /usr/local/bin/helm to refresh on Debian (Homebrew keeps macOS up to date).
+  when:
+    - ansible_os_family == "Debian"
+    - not helm_bin.stat.exists

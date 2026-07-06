@@ -7,3 +7,6 @@
 
 - name: Include krew install tasks
   ansible.builtin.include_tasks: krew.yml
+
+- name: Include helm install tasks
+  ansible.builtin.include_tasks: helm.yml
