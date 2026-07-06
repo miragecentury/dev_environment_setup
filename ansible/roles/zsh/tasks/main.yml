@@ -1,4 +1,17 @@
 ---
+- name: Update bash (Debian)
+  ansible.builtin.apt:
+    name: bash
+    state: latest
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Update bash (macOS)
+  community.general.homebrew:
+    name: bash
+    state: latest
+  when: ansible_os_family == "Darwin"
+
 - name: Install zsh (Debian)
   ansible.builtin.apt:
     name: zsh
@@ -19,19 +32,8 @@
     - brew_zsh is failed
     - "'Error:' in (brew_zsh.msg | default(''))"
 
-- name: Check if Oh My Zsh is installed
-  ansible.builtin.stat:
-    path: "{{ ansible_env.HOME }}/.oh-my-zsh"
-  register: omz_dir
-
-- name: Install Oh My Zsh
-  ansible.builtin.shell: |
-    set -o pipefail
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-  args:
-    creates: "{{ ansible_env.HOME }}/.oh-my-zsh"
-  when: not omz_dir.stat.exists
-  changed_when: true
+# Zinit self-bootstraps from .zshrc on first shell start; it only needs git
+# (already present, since this repo was cloned with it). No install task needed.
 
 - name: Include Oh My Posh install tasks for macOS
   ansible.builtin.include_tasks: darwin.yml
@@ -40,6 +42,18 @@
 - name: Include Oh My Posh install tasks for Debian
   ansible.builtin.include_tasks: debian.yml
   when: ansible_os_family == "Debian"
+
+- name: Ensure Oh My Posh config directory exists
+  ansible.builtin.file:
+    path: "{{ omp_config | dirname }}"
+    state: directory
+    mode: "0755"
+
+- name: Deploy Oh My Posh config
+  ansible.builtin.copy:
+    src: oh-my-posh.omp.toml
+    dest: "{{ omp_config }}"
+    mode: "0644"
 
 - name: Deploy .zshrc
   ansible.builtin.template:
