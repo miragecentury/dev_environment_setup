@@ -1,0 +1,17 @@
+---
+- name: Install CLI tools (Debian)
+  ansible.builtin.apt:
+    name: "{{ debian_cli_packages }}"
+    state: present
+  become: true
+  when: ansible_os_family == "Debian"
+
+- name: Install CLI tools (macOS)
+  community.general.homebrew:
+    name: "{{ homebrew_cli_packages }}"
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_cli
+  failed_when:
+    - brew_cli is failed
+    - "'Error:' in (brew_cli.msg | default(''))"
