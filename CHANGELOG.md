@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2026-07-09
+
+### Added
+
+- iTerm2 Homebrew cask with Nerd Font profile for Oh My Posh / zsh (Dynamic Profile + in-place preference patch)
+- OpenCode CLI (Homebrew tap on macOS; install script on Debian)
+- OpenSpec CLI (`@fission-ai/openspec` via npm global, with zsh completions)
+
 ## [1.7.0] - 2026-07-06
 
 ### Added
@@ -79,7 +87,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Cross-platform Ansible workstation setup for macOS and Debian
 
-[Unreleased]: https://github.com/miragecentury/dev_environment_setup/compare/v1.7.0...HEAD
+[Unreleased]: https://github.com/miragecentury/dev_environment_setup/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.5.0...v1.6.0
 [1.5.0]: https://github.com/miragecentury/dev_environment_setup/compare/v1.4.0...v1.5.0
