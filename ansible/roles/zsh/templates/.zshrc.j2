@@ -1,4 +1,4 @@
-export PATH="$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.opencode/bin:/usr/local/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
@@ -35,6 +35,9 @@ zinit snippet OMZP::virtualenv
 zinit snippet OMZP::kubectl
 zinit snippet OMZP::kubectx
 zinit snippet OMZP::sudo
+
+# OpenSpec CLI completions (openspec completion install → ~/.oh-my-zsh/custom/completions)
+[[ -d ~/.oh-my-zsh/custom/completions ]] && fpath=(~/.oh-my-zsh/custom/completions $fpath)
 
 autoload -Uz compinit && compinit
 

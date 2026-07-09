@@ -78,6 +78,9 @@ ponytail_skills_repo: dietrichgebert/ponytail
 rtk_install_script: https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh
 codegraph_install_script: https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh
 rtk_init_global: true
+opencode_install_script: https://opencode.ai/install
+opencode_homebrew_tap: anomalyco/tap
+openspec_npm_package: "@fission-ai/openspec"
 
 # macOS: prompt for Touch ID when sudo asks for a password (falls back to password)
 sudo_touchid: true
@@ -88,10 +91,16 @@ homebrew_casks:
   - wave
   - font-meslo-lg-nerd-font
   - cursor-cli
+  - iterm2
 
 # Terminal font (a Nerd Font is required for the Oh My Posh prompt glyphs).
 # Must match a family installed by the font cask above.
 terminal_font: "MesloLGS Nerd Font Mono"
+terminal_font_size: 14
+
+# iTerm2 dynamic profile (login shell → system zsh + managed .zshrc / Oh My Posh).
+iterm2_profile_name: "Miragecentury"
+iterm2_dynamic_profile_guid: "F4E3D2C1-B0A9-8765-4321-FEDCBA987654"
 
 # Apps to apply terminal_font to. Both Cursor and Wave store settings as a flat
 # JSON object, so we just merge these keys in (see the fonts role).

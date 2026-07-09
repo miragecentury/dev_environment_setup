@@ -50,6 +50,69 @@
   register: codegraph_agents
   changed_when: codegraph_agents.rc == 0
 
+- name: Tap OpenCode Homebrew repository (macOS)
+  community.general.homebrew_tap:
+    name: "{{ opencode_homebrew_tap }}"
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Trust OpenCode Homebrew tap (macOS)
+  ansible.builtin.command:
+    argv:
+      - brew
+      - trust
+      - --tap
+      - "{{ opencode_homebrew_tap }}"
+  changed_when: false
+  when: ansible_os_family == "Darwin"
+
+- name: Install OpenCode (macOS)
+  community.general.homebrew:
+    name: opencode
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_opencode
+  failed_when:
+    - brew_opencode is failed
+    - "'Error:' in (brew_opencode.msg | default(''))"
+
+- name: Install OpenCode (Debian)
+  ansible.builtin.shell:
+    cmd: curl -fsSL {{ opencode_install_script }} | bash -s -- --no-modify-path
+    creates: "{{ ansible_env.HOME }}/.opencode/bin/opencode"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+  when: ansible_os_family == "Debian"
+  changed_when: true
+
+- name: Install OpenSpec globally
+  community.general.npm:
+    name: "{{ openspec_npm_package }}"
+    global: true
+    state: present
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
+
+- name: Ensure OpenSpec zsh completion directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.oh-my-zsh/custom/completions"
+    state: directory
+    mode: "0755"
+
+- name: Install OpenSpec zsh completions
+  ansible.builtin.command:
+    argv:
+      - openspec
+      - completion
+      - install
+      - zsh
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+    PATH: "{{ ansible_env.PATH }}"
+  register: openspec_completion
+  changed_when: "'installed successfully' in (openspec_completion.stdout | default('') | lower)"
+
 - name: Install caveman skills globally
   ansible.builtin.command:
     argv:

@@ -18,6 +18,7 @@
     - role: rust_tools
     - role: gh
     - role: fonts
+    - role: iterm2
     - role: zsh
     - role: agent_skills
     - role: angular_tools

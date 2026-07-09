@@ -58,10 +58,10 @@ exec zsh
 | Rust (`rustc`, `cargo`) | rustup install script | rustup install script |
 | Angular CLI / Vite / TypeScript / ESLint / Prettier | npm global (Node via Homebrew) | npm global (Node via apt) |
 | DeerHide agent skills | `npx skills add` (Node via Homebrew) | `npx skills add` (Node via apt) |
-| RTK / CodeGraph / caveman / ponytail | install scripts + `npx skills add` | install scripts + `npx skills add` |
+| RTK / OpenCode / OpenSpec / CodeGraph / caveman / ponytail | install scripts + npm + `npx skills add` | install scripts + npm + `npx skills add` |
 | GitHub CLI (`gh`) | Homebrew | official apt repo |
-| Homebrew + casks | Homebrew, FreeLens, Wave, Cursor CLI | — |
-| Terminal font | Meslo Nerd Font cask + set in Cursor & Wave | — |
+| Homebrew + casks | Homebrew, FreeLens, Wave, iTerm2, Cursor CLI | — |
+| Terminal font | Meslo Nerd Font cask + set in Cursor, Wave & iTerm2 | — |
 
 ## Customization
 
@@ -78,16 +78,21 @@ homebrew_casks:
   - wave
   - font-meslo-lg-nerd-font
   - cursor-cli
-terminal_font: "MesloLGS Nerd Font Mono"  # applied to Cursor & Wave terminals
+  - iterm2
+terminal_font: "MesloLGS Nerd Font Mono"  # applied to Cursor, Wave & iTerm2
+terminal_font_size: 14
+iterm2_profile_name: "Miragecentury"
 ```
 
 Re-run `./scripts/run_ansible.sh` after changes.
 
 The `fonts` role installs a Nerd Font and merges `terminal_font` into the Cursor
 (`terminal.integrated.fontFamily` / `editor.fontFamily`) and Wave (`term:fontfamily`)
-settings, preserving any other settings you already have. To use a different font,
-add its cask to `homebrew_casks` and point `terminal_font` at the installed family
-name (check with `fc-list | grep -i "<name>"`).
+settings, preserving any other settings you already have. The `iterm2` role deploys
+a Dynamic Profile (`iterm2_profile_name`, login shell → system zsh) and patches the
+Nerd Font onto every existing iTerm2 profile when preferences are already on disk.
+To use a different font, add its cask to `homebrew_casks` and point `terminal_font`
+at the installed family name (check with `fc-list | grep -i "<name>"`).
 
 ## Pre-clone GitHub repos
 
@@ -143,8 +148,13 @@ tsc --version               # should print the TypeScript compiler version
 tsx --version               # should print the tsx version
 eslint --version            # should print the ESLint version
 prettier --version          # should print the Prettier version
+opencode --version          # should print the OpenCode version
+openspec --version          # should print the OpenSpec version
+codegraph --version         # should print the CodeGraph version
 ssh-add -l           # macOS: keys listed without passphrase prompt after Keychain setup
 fc-list | grep -i meslo   # macOS: confirms the Nerd Font is installed
 ```
 
-After the run, restart Cursor and Wave so they pick up the new terminal font.
+After the run, restart Cursor, Wave, and iTerm2 so they pick up the new terminal font.
+On a fresh iTerm2 install, choose **Profiles → Miragecentury** once (or re-run the
+playbook after opening iTerm2 once to patch the default profile in place).

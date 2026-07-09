@@ -1,0 +1,35 @@
+---
+# iTerm2: Nerd Font + login-shell profile for Oh My Posh / zsh.
+# Fresh installs get a Dynamic Profile; existing prefs get patched in place.
+
+- name: Ensure iTerm2 DynamicProfiles directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/Library/Application Support/iTerm2/DynamicProfiles"
+    state: directory
+    mode: "0755"
+  when: ansible_os_family == "Darwin"
+
+- name: Deploy iTerm2 dynamic profile
+  ansible.builtin.template:
+    src: miragecentury.json.j2
+    dest: >-
+      {{ ansible_env.HOME }}/Library/Application Support/iTerm2/DynamicProfiles/miragecentury.json
+    mode: "0644"
+  when: ansible_os_family == "Darwin"
+
+- name: Check for existing iTerm2 preferences
+  ansible.builtin.stat:
+    path: "{{ ansible_env.HOME }}/Library/Preferences/com.googlecode.iterm2.plist"
+  register: iterm2_plist
+  when: ansible_os_family == "Darwin"
+
+- name: Set iTerm2 font on all profiles (preserving other preferences)
+  ansible.builtin.script: set_iterm2_font.py
+  environment:
+    ITERM2_FONT: "{{ terminal_font }} {{ terminal_font_size }}"
+    ITERM2_PLIST: "{{ ansible_env.HOME }}/Library/Preferences/com.googlecode.iterm2.plist"
+  register: iterm2_font
+  changed_when: "'changed' in iterm2_font.stdout"
+  when:
+    - ansible_os_family == "Darwin"
+    - iterm2_plist.stat.exists
