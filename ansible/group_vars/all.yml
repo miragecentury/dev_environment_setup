@@ -82,8 +82,17 @@ opencode_install_script: https://opencode.ai/install
 opencode_homebrew_tap: anomalyco/tap
 openspec_npm_package: "@fission-ai/openspec"
 
+# Pulumi (Debian install script; macOS uses Homebrew)
+pulumi_install_script: https://get.pulumi.com
+
+# Flutter SDK (macOS Homebrew cask; Debian clones the git repo)
+flutter_git_repo: https://github.com/flutter/flutter.git
+flutter_sdk_path: "{{ ansible_env.HOME }}/development/flutter"
+flutter_channel: stable
+
 # macOS: prompt for Touch ID when sudo asks for a password (falls back to password)
 sudo_touchid: true
+
 
 # macOS Homebrew casks to install
 homebrew_casks:

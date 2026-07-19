@@ -1,6 +1,8 @@
-export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.opencode/bin:/usr/local/bin:$PATH"
+export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.opencode/bin:$HOME/.pulumi/bin:/usr/local/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+[ -d "{{ flutter_sdk_path }}/bin" ] && export PATH="{{ flutter_sdk_path }}/bin:$PATH"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+
 
 # GPG (Linux/WSL2 need GPG_TTY so pinentry can prompt in the terminal)
 export GPG_TTY=$(tty)

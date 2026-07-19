@@ -1,0 +1,19 @@
+---
+- name: Install Pulumi (macOS)
+  community.general.homebrew:
+    name: pulumi
+    state: present
+  when: ansible_os_family == "Darwin"
+  register: brew_pulumi
+  failed_when:
+    - brew_pulumi is failed
+    - "'Error:' in (brew_pulumi.msg | default(''))"
+
+- name: Install Pulumi (Debian)
+  ansible.builtin.shell:
+    cmd: curl -fsSL {{ pulumi_install_script }} | sh
+    creates: "{{ ansible_env.HOME }}/.pulumi/bin/pulumi"
+  environment:
+    HOME: "{{ ansible_env.HOME }}"
+  when: ansible_os_family == "Debian"
+  changed_when: true

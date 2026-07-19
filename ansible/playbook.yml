@@ -32,3 +32,5 @@
     - role: argocd_kargo_tools
     - role: secrets_tools
     - role: podman_tools
+    - role: pulumi
+    - role: flutter

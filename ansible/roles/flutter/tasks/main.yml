@@ -1,0 +1,14 @@
+---
+- name: Install Flutter SDK (macOS)
+  community.general.homebrew_cask:
+    name: flutter
+    state: present
+  when: ansible_os_family == "Darwin"
+
+- name: Install Flutter SDK (Debian)
+  ansible.builtin.git:
+    repo: "{{ flutter_git_repo }}"
+    dest: "{{ flutter_sdk_path }}"
+    version: "{{ flutter_channel }}"
+    depth: 1
+  when: ansible_os_family == "Debian"
