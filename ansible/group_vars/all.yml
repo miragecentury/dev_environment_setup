@@ -90,6 +90,11 @@ flutter_git_repo: https://github.com/flutter/flutter.git
 flutter_sdk_path: "{{ ansible_env.HOME }}/development/flutter"
 flutter_channel: stable
 
+# Android Studio + SDK (macOS Homebrew casks; Debian snap + cmdline-tools zip)
+# macOS SDK root: $HOMEBREW_PREFIX/share/android-commandlinetools
+android_sdk_root: "{{ ansible_env.HOME }}/Android/Sdk"
+android_cmdline_tools_url: https://dl.google.com/android/repository/commandlinetools-linux-14742923_latest.zip
+
 # macOS: prompt for Touch ID when sudo asks for a password (falls back to password)
 sudo_touchid: true
 

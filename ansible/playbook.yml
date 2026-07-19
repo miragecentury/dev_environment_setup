@@ -34,3 +34,4 @@
     - role: podman_tools
     - role: pulumi
     - role: flutter
+    - role: android_tools

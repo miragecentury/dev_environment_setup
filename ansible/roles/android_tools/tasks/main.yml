@@ -1,0 +1,47 @@
+---
+- name: Install Android Studio and SDK (macOS)
+  community.general.homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - android-studio
+    - android-commandlinetools
+  when: ansible_os_family == "Darwin"
+
+- name: Ensure Android SDK root exists (Debian)
+  ansible.builtin.file:
+    path: "{{ android_sdk_root }}/cmdline-tools"
+    state: directory
+    mode: "0755"
+  when: ansible_os_family == "Debian"
+
+- name: Check for cmdline-tools/latest (Debian)
+  ansible.builtin.stat:
+    path: "{{ android_sdk_root }}/cmdline-tools/latest/bin/sdkmanager"
+  register: android_cmdline_latest
+  when: ansible_os_family == "Debian"
+
+- name: Download Android command-line tools (Debian)
+  ansible.builtin.unarchive:
+    src: "{{ android_cmdline_tools_url }}"
+    dest: "{{ android_sdk_root }}/cmdline-tools"
+    remote_src: true
+  when:
+    - ansible_os_family == "Debian"
+    - not android_cmdline_latest.stat.exists
+
+- name: Move cmdline-tools to latest (Debian)
+  ansible.builtin.command:
+    argv:
+      - mv
+      - "{{ android_sdk_root }}/cmdline-tools/cmdline-tools"
+      - "{{ android_sdk_root }}/cmdline-tools/latest"
+    creates: "{{ android_sdk_root }}/cmdline-tools/latest/bin/sdkmanager"
+  when: ansible_os_family == "Debian"
+
+- name: Install Android Studio (Debian)
+  community.general.snap:
+    name: android-studio
+    classic: true
+  become: true
+  when: ansible_os_family == "Debian"

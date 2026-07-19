@@ -1,6 +1,13 @@
 export PATH="$HOME/bin:$HOME/.local/bin:$HOME/.opencode/bin:$HOME/.pulumi/bin:/usr/local/bin:$PATH"
 export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
 [ -d "{{ flutter_sdk_path }}/bin" ] && export PATH="{{ flutter_sdk_path }}/bin:$PATH"
+{% if ansible_os_family == "Darwin" %}
+export ANDROID_HOME="{{ '/opt/homebrew' if ansible_architecture == 'arm64' else '/usr/local' }}/share/android-commandlinetools"
+{% else %}
+export ANDROID_HOME="{{ android_sdk_root }}"
+{% endif %}
+export ANDROID_SDK_ROOT="$ANDROID_HOME"
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$PATH"
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 
 
