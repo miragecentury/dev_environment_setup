@@ -1,0 +1,67 @@
+---
+# ponytail: Xcode.app itself stays App Store / xcodes — Apple auth; we wire CLT + license + CocoaPods
+# Role is included only when ansible_os_family == Darwin (see playbook.yml).
+
+- name: Check Xcode developer directory
+  ansible.builtin.command:
+    argv: [xcode-select, -p]
+  register: xcode_select
+  failed_when: false
+  changed_when: false
+
+- name: Install Xcode Command Line Tools
+  ansible.builtin.shell: |
+    touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+    PROD=$(softwareupdate -l 2>/dev/null | sed -n 's/^[* ]*Label: \(Command Line Tools.*\)/\1/p' | head -n1)
+    if [ -n "$PROD" ]; then
+      softwareupdate -i "$PROD" --verbose
+    else
+      xcode-select --install || true
+    fi
+    rm -f /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+  args:
+    creates: /Library/Developer/CommandLineTools
+  become: true
+  when: xcode_select.rc != 0
+
+- name: Check for Xcode.app
+  ansible.builtin.stat:
+    path: /Applications/Xcode.app
+  register: xcode_app
+
+- name: Select Xcode.app as developer directory
+  ansible.builtin.command:
+    argv:
+      - xcode-select
+      - -s
+      - /Applications/Xcode.app/Contents/Developer
+  become: true
+  when: xcode_app.stat.exists
+  changed_when: true
+
+- name: Accept Xcode license
+  ansible.builtin.command:
+    argv: [xcodebuild, -license, accept]
+  become: true
+  when: xcode_app.stat.exists
+  register: xcode_license
+  changed_when: xcode_license.rc == 0
+  failed_when: false
+
+- name: Run Xcode first-launch setup
+  ansible.builtin.command:
+    argv: [xcodebuild, -runFirstLaunch]
+  become: true
+  when: xcode_app.stat.exists
+  register: xcode_first_launch
+  changed_when: xcode_first_launch.rc == 0
+  failed_when: false
+
+- name: Install CocoaPods
+  community.general.homebrew:
+    name: cocoapods
+    state: present
+  register: brew_cocoapods
+  failed_when:
+    - brew_cocoapods is failed
+    - "'Error:' in (brew_cocoapods.msg | default(''))"

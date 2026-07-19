@@ -35,3 +35,5 @@
     - role: pulumi
     - role: flutter
     - role: android_tools
+    - role: ios_tools
+      when: ansible_os_family == "Darwin"
