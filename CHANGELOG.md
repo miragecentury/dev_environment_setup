@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pulumi CLI (Homebrew on macOS; get.pulumi.com install script on Debian)
 - Flutter SDK (Homebrew cask on macOS; git clone of stable channel on Debian)
 - Hubble CLI in cilium_tools role (Homebrew on macOS; GitHub release on Debian)
+- Android Studio and Android SDK (Homebrew casks on macOS; snap + cmdline-tools on Debian)
+- iOS tooling on macOS only (`ios_tools`): Xcode CLT/license wiring and CocoaPods via Homebrew
 
 ### Changed
 
