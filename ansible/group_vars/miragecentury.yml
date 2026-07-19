@@ -7,7 +7,6 @@ preclone_repos:
   - miragecentury/dev_environment_setup
   - DeerHide/fastapi_factory_utilities
   - laelidona/velmios_lib
-  - laelidona/velmios_knowledge
   - laelidona/customer_backend
   - laelidona/notification_backend
   - laelidona/booking_backend
