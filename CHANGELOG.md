@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Pulumi CLI (Homebrew on macOS; get.pulumi.com install script on Debian)
+- Flutter SDK (Homebrew cask on macOS; git clone of stable channel on Debian)
+- Hubble CLI in cilium_tools role (Homebrew on macOS; GitHub release on Debian)
+
+### Changed
+
+- Pre-clone list no longer includes `laelidona/velmios_knowledge`
+
 ## [1.8.0] - 2026-07-09
 
 ### Added
