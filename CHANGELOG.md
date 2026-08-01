@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Pre-clone list no longer includes `laelidona/velmios_knowledge`
+- `ai_tools` installs agent skills from declarative `ai_skills_packages` (replaces `caveman_skills_repo` / `ponytail_skills_repo`); adds velmios-skills, Angular, daisyUI, Tailwind, find-skills, web-design-guidelines, and frontend-design
 
 ## [1.8.0] - 2026-07-09
 

@@ -58,7 +58,7 @@ exec zsh
 | Rust (`rustc`, `cargo`) | rustup install script | rustup install script |
 | Angular CLI / Vite / TypeScript / ESLint / Prettier | npm global (Node via Homebrew) | npm global (Node via apt) |
 | DeerHide agent skills | `npx skills add` (Node via Homebrew) | `npx skills add` (Node via apt) |
-| RTK / OpenCode / OpenSpec / CodeGraph / caveman / ponytail | install scripts + npm + `npx skills add` | install scripts + npm + `npx skills add` |
+| RTK / OpenCode / OpenSpec / CodeGraph / `ai_skills_packages` | install scripts + npm + `npx skills add` | install scripts + npm + `npx skills add` |
 | GitHub CLI (`gh`) | Homebrew | official apt repo |
 | Homebrew + casks | Homebrew, FreeLens, Wave, iTerm2, Cursor CLI | — |
 | Terminal font | Meslo Nerd Font cask + set in Cursor, Wave & iTerm2 | — |

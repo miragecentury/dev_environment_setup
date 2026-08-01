@@ -20,7 +20,7 @@ Installs and configures:
 - **Rust tooling** — rustup with stable toolchain (`rustc`, `cargo`, `rustfmt`)
 - **Frontend tooling** — Angular CLI, Vite, TypeScript (`tsc`), tsx, ESLint, Prettier
 - **DeerHide agent skills** — all skills from [DeerHide/agent_skills](https://github.com/DeerHide/agent_skills) via `npx skills`
-- **AI tooling** — [OpenCode](https://opencode.ai), [OpenSpec](https://github.com/Fission-AI/OpenSpec), [RTK](https://github.com/rtk-ai/rtk), [CodeGraph](https://github.com/colbymchenry/codegraph), [caveman](https://github.com/JuliusBrussee/caveman), [ponytail](https://github.com/dietrichgebert/ponytail) skills
+- **AI tooling** — [OpenCode](https://opencode.ai), [OpenSpec](https://github.com/Fission-AI/OpenSpec), [RTK](https://github.com/rtk-ai/rtk), [CodeGraph](https://github.com/colbymchenry/codegraph), plus global agent skills from `ai_skills_packages` (caveman, ponytail, velmios-skills, Angular/daisyUI/Tailwind/frontend-design, and more)
 - **GitHub CLI** (`gh`)
 - **Homebrew** (macOS) with casks FreeLens, Wave, and iTerm2
 
@@ -51,7 +51,7 @@ Edit [ansible/group_vars/all.yml](ansible/group_vars/all.yml) to change:
 - Rust install script (`rustup_install_script`)
 - Angular npm packages (`angular_npm_packages`)
 - DeerHide agent skills repo (`agent_skills_repo`)
-- AI tooling repos and scripts (`opencode_homebrew_tap`, `openspec_npm_package`, `caveman_skills_repo`, `ponytail_skills_repo`, `rtk_init_global`)
+- AI tooling repos and scripts (`opencode_homebrew_tap`, `openspec_npm_package`, `ai_skills_packages`, `rtk_init_global`)
 - mirrord install script (`mirrord_install_script`; macOS uses Homebrew)
 - MongoDB apt version for mongosh on Debian (`mongodb_apt_version`)
 - macOS Homebrew casks (`homebrew_casks`)

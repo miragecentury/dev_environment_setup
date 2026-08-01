@@ -73,8 +73,25 @@ krunkit_homebrew_tap: slp/krunkit
 mongodb_apt_version: "8.0"
 
 # AI tooling
-caveman_skills_repo: JuliusBrussee/caveman
-ponytail_skills_repo: dietrichgebert/ponytail
+# Global agent skills installed by ai_tools (DeerHide stays in agent_skills role).
+# Omit `skills` to install the whole package (--all); set `skills` for a subset.
+ai_skills_packages:
+  - repo: JuliusBrussee/caveman
+  - repo: dietrichgebert/ponytail
+  - repo: Laelidona/velmios-skills
+  - repo: alfredoperez/angular-best-practices
+  - repo: angular/skills
+    skills: [angular-developer]
+  - repo: saadeghi/daisyui
+    skills: [daisyui]
+  - repo: pproenca/dot-skills
+    skills: [tailwind]
+  - repo: vercel-labs/skills
+    skills: [find-skills]
+  - repo: vercel-labs/agent-skills
+    skills: [web-design-guidelines]
+  - repo: anthropics/skills
+    skills: [frontend-design]
 rtk_install_script: https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh
 codegraph_install_script: https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh
 rtk_init_global: true
@@ -97,7 +114,6 @@ android_cmdline_tools_url: https://dl.google.com/android/repository/commandlinet
 
 # macOS: prompt for Touch ID when sudo asks for a password (falls back to password)
 sudo_touchid: true
-
 
 # macOS Homebrew casks to install
 homebrew_casks:
