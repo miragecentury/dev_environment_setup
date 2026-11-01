@@ -8,6 +8,7 @@ ssh_identities:
   - "{{ github_ssh_identity }}"
   - ~/.ssh/melanie.localunicorns.info
   - ~/.ssh/outside_cluster_tools_project_key
+  - ~/.ssh/bunryl-miragecentury
 
 # Optional GPG key id for keychain plugin (leave empty to skip)
 gpg_key_id: ""
